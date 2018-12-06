@@ -484,7 +484,6 @@ function startTests(){
 	while( i<testFunctions.length && window[testFunctions[i]]() === true){
 		i++;
 	}
-	displayMessage(' All tests passed! ', 'header');	
 }
 
 
