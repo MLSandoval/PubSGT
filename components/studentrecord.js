@@ -13,6 +13,15 @@ class StudentRecord{
 		(function) deleteCallback - the removal function from the model to call when this student wants to be removed from the model's list
 	return: undefined (don't return undefined, it will screw it up a constructor, don't put a return)
 	*/
+	/*
+	this function has been written for you to see best practices and proper 
+	compartmentalization of data, as well as correct binding.  It also
+	uses a default parameter on the deleteCallback function, but don't worry about that
+	for your version 
+	You do not need to modify any more of THIS constructor, but other constructors 
+	will not be built out.
+	Please make sure you understand what is going on and could recreate it via notes rather than direct copying!
+	*/
 	constructor(id, name, course, grade, deleteCallback=()=>{}){
 		this.data = {
 			id: id,
@@ -44,17 +53,8 @@ class StudentRecord{
 		(multiple) value - the value to change the field to
 	return: (boolean) true if it was changed, false if it was not
 	*/
-	update( field, value ){
-		var allowedFields = ['id', 'name', 'course', 'grade'];
-		if( allowedFields.indexOf( field ) !== -1 ){
-			this.data[field] = value;
-			if( field !== 'id'){
-				this.domElements[field].text(value);
-			}
-			return true;
-		}
-		console.error('cannot modify '+ field);
-		return false;
+	update(  ){
+
 	}
 	/* getData - get all the student data as a simple object
 	params: none
@@ -65,7 +65,7 @@ class StudentRecord{
 		(number): grade
 	*/
 	getData(){
-		return this.data;
+
 	}
 	/* render - create and return a table row (TR) with 4 table cells (TD) in them:
 		name : the student's name
@@ -83,21 +83,7 @@ class StudentRecord{
 	return: (jquery dom element) the row that contains the student dom elements
 	*/
 	render(){
-		this.domElements.row = $("<tr>");
-		this.domElements.name = $("<td>").text( this.data.name );
-		this.domElements.course = $("<td>").text( this.data.course);
-		this.domElements.grade = $("<td>").text( this.data.grade );
-		this.domElements.operations = $("<td>");
-		this.deleteButton = $("<button>",{
-			text: 'delete',
-			'class': 'btn btn-lrg btn-danger',
-			on: {
-				click: this.handleDelete
-			}
-		});
-		this.domElements.operations.append( this.deleteButton );
-		this.domElements.row.append(this.domElements.name, this.domElements.course, this.domElements.grade , this.domElements.operations);
-		return this.domElements.row;
+
 	}
 	/* handleDelete - call the model delete callback, and remove this student's dom element
 	purpose: 
@@ -105,7 +91,6 @@ class StudentRecord{
 		remove this object's dom element row to erase the entire dom element
 	*/
 	handleDelete(){
-		this.deleteCallback( this );
-		this.domElements.row.remove();
+
 	}
 }
