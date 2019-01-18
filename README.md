@@ -7,18 +7,18 @@ Version 2.0 adds more CRUD functionality.  Previously you added R (Read), and no
   - delete an existing student from the database.  This should build off your existing delete functionality.  Remember to take into account a useful User Experience when planning out how to tie in the delete functionality.
 
 ## Getting Started
-> - Do you have the latest changes on your master branch?
+> - Do you have the latest changes on your v1.0 branch?
     - **No** - talk with an instructor
     - **I don't know** - talk with an instructor
     - **Yes** - Move on to Pull Latest Changes
-> - Are you on your master branch?
+> - Are you on your v1.0 branch?
     - **Yes** - continue to "Pull Latest Changes"
     - **I dont know** Run the command below
         - `git branch` - this will highlight the branch you are currently on
     - **No** - Make sure you `git add .` and `git commit` to your current branch before you switch to your master branch
 > - Pull Latest Changes
-        - `git checkout master`
-        - `git pull origin master`
+        - `git checkout v1.0`
+        - `git pull origin v1.0`
 > - Create the new feature branch
     - `git checkout -b v2.0`
 > - Work on the scope defined <a href="https://github.com/Learning-Fuze/SGT/tree/v2.0#scope">Below</a>
@@ -30,7 +30,7 @@ Version 2.0 adds more CRUD functionality.  Previously you added R (Read), and no
 > - Send to gitHub (Push)
     - `git push origin v2.0`
 > - Create pull request
-    - Pull request should be made from v2.0 to **your repository's/teams** master branch
+    - Pull request should be made from v2.0 your branch on our repo
 
 
 ## Scope
@@ -41,24 +41,26 @@ Version 2.0 adds more CRUD functionality.  Previously you added R (Read), and no
     - Activate the load function (from the DB, made in v1.0) on document load.
     - Ensure that your load function records the student's ID, given to you by the database.  This will be important for future interaction with the student, such as deletion or updating.
     - On creating a new student, also send the new student data to the server
-        - API URL: `s-apis.learningfuze.com/sgt/create`
+        - api information
+            - URL: `http://s-apis.learningfuze.com/sgt/create`
             - method: post
-            - input:
+            - input: (data going to the server)
                 - api_key: (string) your api key
                 - name: (string) the student's name
                 - course: (string) the course the student is taking
                 - grade: (number) the student's grade for the course
-            - output:
+            - output: (data coming back from the server)
                 - success: (boolean) whether the operation succeeded
                 - errors (optional): (array) an array with all errors that occurred
                 - new_id: (number) The ID of the new student in the database.
     - On deleting a student, also request the deletion of the student on the database
-        - API URL: `s-apis.learningfuze.com/sgt/delete`
+        - api information
+            - URL: `http://s-apis.learningfuze.com/sgt/delete`
             - method: post
-            - input:
+            - input: (data going to the server)
                 - api_key: (string) your api key
                 - student_id: (number) the ID of the student within the database
-            - output:
+            - output: (data coming back from the server)
                 - success: (boolean) whether the operation succeeded
                 - errors (optional): (array) an array with all errors that occurred
                 
