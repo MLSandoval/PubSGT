@@ -40,7 +40,7 @@ function studentrecord_tests(){
 		if( button.length !== 1){
 			throw '4th TD should have had a button in it, could not find one';
 		}
-		if( button.text() !== 'delete' ){
+		if( button.text() !== 'DELETE' ){
 			throw '4th TD button should have had text of DELETE, it had ' + button.text();
 		}
 	} catch( error ){
