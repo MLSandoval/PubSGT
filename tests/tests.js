@@ -222,7 +222,7 @@ function model_tests(){
 		var studentListCopy = studentList.slice();
 		var result = testModel.remove(studentListCopy[0]);
 		if(result!==true){
-			throw('Should have returned true after successfully removing student, returned',result);
+			throw('Should have returned true after successfully removing student, returned'+result);
 		}
 		var newList = testModel.getAllStudents();
 		if(newList.length !== 1){
