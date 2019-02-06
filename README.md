@@ -51,8 +51,6 @@ Version 1 is the starting point.  The HTML/CSS has already been made.  You will 
 
 ### Version .23 - update (1.5 hours) - update the stored data AND the dom elements
 - takes in field and value.  field is the name, course, or grade as a string, then value is the new value
-- calls the deleteCallback property stored in this object
-    - passes in the ID property of the data object to the deleteCallback
 - updates the row of the field with the new text.
 
 # SGT_Template
