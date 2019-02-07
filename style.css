@@ -56,3 +56,7 @@
 	font-weight: bold;
 	cursor: pointer;
 }
+/* template info */
+.template{
+	display: none;
+}

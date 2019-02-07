@@ -82,8 +82,13 @@
         <div id="modalContent">test</div>
     </div>
 </div>
-
-
+<!-- I do this instead of template semantic components but they don't work in IE11-->
+<div class="template" id="deleteConfirm">
+    <div class="deleteBox">
+        <div>{message}</div>
+        <button class='accept'>do it</button><button class='decline'>nevermind</button>
+    </div>
+</div>
 </body>
 </html>
 
