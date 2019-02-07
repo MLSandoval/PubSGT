@@ -133,7 +133,7 @@ class SGT_template{
 		id: the id of the student
 	return: false if unsuccessful in adding student, true if successful
 	*/
-	createStudent(name, course, grade, received, notes, id){
+	createStudent(name, course, grade, received, id, notes=''){
 		if(this.data.hasOwnProperty(id)){
 			return false;
 		}
@@ -230,7 +230,7 @@ class SGT_template{
 	handleDataFromServer( response ){
 		if(response && response.success){
 			var data = response.data;
-			//createStudent(name, course, grade, received, notes, id){
+			//createStudent(name, course, grade, received, id, notes){
 			for( var studentIndex = 0; studentIndex < data.length; studentIndex++){
 				this.createStudent( 
 					data[studentIndex].name, 

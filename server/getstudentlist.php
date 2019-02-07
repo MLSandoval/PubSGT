@@ -8,7 +8,7 @@ $output = [
 	'success'=>false
 ];
 
-$query = "SELECT name, course, grade, added from `grades`";
+$query = "SELECT id, name, course, grade, added from `grades`";
 
 $result = mysqli_query($db, $query);
 
