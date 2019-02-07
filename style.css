@@ -5,20 +5,20 @@
 .studentDetailsContainer .data{
 	font-weight: normal;
 }
-	/*
-		container: $("<div>").addClass('studentDetailsContainer'),
-			nameContainer: $("<div>").addClass('name').text('name'),
-			nameText: $("<div>").addClass('data').text(this.data.name),
-			courseContainer: $("<div>").addClass('course').text('course'),
-			courseText: $("<div>").addClass('data').text(this.data.course),
-			gradeContainer: $("<div>").addClass('grade').text('grade'),
-			gradeText: $("<div>").addClass('data').text(this.data.grade),
-			instructorContainer: $("<div>").addClass('instructor').text('instructor'),
-			instructorText: $("<div>").addClass('data').text(this.data.instructor),
-			completedContainer: $("<div>").addClass('completed').text('completed'),
-			completedText: $("<div>").addClass('data').text(this.data.completed),
-			notesContainer: $("<div>").addClass('notes').text('notes'),
-*/
+/* student display area */
+
+#displayArea tr{
+	cursor: pointer;
+}
+
+#displayArea tr:nth-child(even){
+	background-color: lightgrey;
+}
+#displayArea tr:hover{
+	background-color: lightgreen;
+}
+
+/*modal info*/
 
 #modalShadow{
 	position: fixed;
