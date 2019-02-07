@@ -12,20 +12,33 @@ class SGT_template{
 		this.studentCount = 0;
 		this.buttons = {
 			add: elementConfig.addButton,
-			cancel: elementConfig.cancelButton
+			cancel: elementConfig.cancelButton,
+			modalClose: elementConfig.modalClose
 		}
 		this.inputs = {
 			name: elementConfig.nameInput,
 			course: elementConfig.courseInput,
-			grade: elementConfig.gradeInput
+			grade: elementConfig.gradeInput,
+			instructor: elementConfig.instructorInput,
+			notes: elementConfig.notesInput
 		}
 		this.displayAreas = {
 			students : elementConfig.displayArea,
-			average : elementConfig.averageArea
+			average : elementConfig.averageArea,
+			modalShadow: elementConfig.modalShadow,
+			modalContent: elementConfig.modalContent,	
 		}
 		this.handleAdd = this.handleAdd.bind( this );
 		this.handleCancel = this.handleCancel.bind( this );
 		this.deleteStudent = this.deleteStudent.bind(this);
+		this.handleDataFromServer = this.handleDataFromServer.bind(this);
+		this.handleError = this.handleError.bind(this);
+		this.showStudentDetails = this.showStudentDetails.bind(this);
+		this.getOneStudent_Server = this.getOneStudent_Server.bind(this);
+		this.hideModal = this.hideModal.bind(this);
+		this.showModal = this.showModal.bind(this);
+
+		this.getAllStudents_Server();
 	}
 	/* addEventHandlers - add event handlers to premade dom elements
 	adds click handlers to add and cancel buttons using the dom elements passed into constructor
@@ -36,6 +49,7 @@ class SGT_template{
 	addEventHandlers(){
 		this.buttons.add.click( this.handleAdd );
 		this.buttons.cancel.click( this.handleCancel );
+		this.buttons.modalClose.click( this.hideModal );
 	}
 	/* clearInputs - take the three inputs and clear their values
 	params: none
@@ -45,6 +59,8 @@ class SGT_template{
 		this.inputs.name.val('');
 		this.inputs.course.val('');
 		this.inputs.grade.val('');
+		this.inputs.instructor.val('');
+		this.inputs.notes.val('');
 	}
 	/* handleCancel - function to handle the cancel button press
 	params: none
@@ -59,9 +75,14 @@ class SGT_template{
 	return: undefined
 	*/
 	handleAdd(){
-		this.createStudent( this.inputs.name.val(), this.inputs.course.val(), this.inputs.grade.val() );
+		this.createStudent_Server( 
+			this.inputs.name.val(), 
+			this.inputs.course.val(), 
+			this.inputs.grade.val(), 
+			this.inputs.instructor.val(),
+			this.inputs.notes.val()
+		);
 		this.clearInputs();
-		this.displayAllStudents();
 	}
 	/* displayAllStudents - iterate through all students in the model
 	purpose: 
@@ -88,7 +109,12 @@ class SGT_template{
 	params: none
 	return: undefined */
 	displayAverage(){
-		this.displayAreas.average.text( this.model.calculateGradeAverage() );
+		var sum = 0;
+		for( var index in this.data){
+			sum += this.data[index].getData().grade;
+		}
+		var average = sum / this.studentCount;
+		this.displayAreas.average.text( average );
 	}
 	/* createStudent - take in data for a student, make a new Student object, and add it to this.data object
 
@@ -107,7 +133,7 @@ class SGT_template{
 		id: the id of the student
 	return: false if unsuccessful in adding student, true if successful
 	*/
-	createStudent(name, course, grade, id){
+	createStudent(name, course, grade, received, notes, id){
 		if(this.data.hasOwnProperty(id)){
 			return false;
 		}
@@ -117,7 +143,11 @@ class SGT_template{
 				id++;
 			}
 		}
-		var student = new Student(id, name, course, grade, this.deleteStudent);
+		var student = new Student(
+			id, name, course, grade, received, notes,  
+			this.deleteStudent,
+			this.getOneStudent_Server
+		);
 		this.data[id] = student;
 		return true;
 	}
@@ -173,8 +203,7 @@ class SGT_template{
 	*/
 	updateStudent(id, field, value){
 		if(id!==undefined && this.doesStudentExist(id)){
-			this.data[id][field] = value;
-			return true;
+			return this.data[id].update(field, value);
 		}
 		return false;
 	}
@@ -191,11 +220,121 @@ class SGT_template{
 		true if it was successful, false if not
 	*/
 	deleteStudent(id){
-		if(id!==undefined && this.doesStudentExist(id)){
-			delete this.data[id];
-			return true;
+		this.deleteStudent_Server(id);
+		// if(id!==undefined && this.doesStudentExist(id)){
+		// 	delete this.data[id];
+		// 	return true;
+		// }
+		// return false;
+	}
+	handleDataFromServer( response ){
+		if(response && response.success){
+			var data = response.data;
+			//createStudent(name, course, grade, received, notes, id){
+			for( var studentIndex = 0; studentIndex < data.length; studentIndex++){
+				this.createStudent( 
+					data[studentIndex].name, 
+					data[studentIndex].course, 
+					data[studentIndex].grade, 
+					data[studentIndex].added,
+					data[studentIndex].id
+				);
+			}
+			this.studentCount = data.length;
+			this.displayAllStudents();			
+		} else {
+			this.handleError( response.error );
 		}
-		return false;
+	}
+	resetStudents(){
+		this.data = {};
+		this.studentCount = 0;		
+	}
+	getAllStudents_Server(){
+		this.resetStudents();
+		$.ajax({
+			url: 'server/getstudentlist.php',
+			dataType: 'json',
+			method: 'post',
+			success: this.handleDataFromServer,
+			error: this.handleError
+		});
+	}
+	handleError(response, xtpObj, rawResponse){
+		console.error('error: ' + rawResponse);
+	}
+	showStudentDetails( response ){
+		if(response && response.success){
+			var studentID = response.data.id;
+			delete response.data.id;
+			for( var key in response.data){
+				this.updateStudent(studentID, key, response.data[key]);
+			}
+			var student = this.readStudent(studentID);
+			this.showModal( student.renderDetails());
+		}
+	}
+	getOneStudent_Server( id ){
+
+		$.ajax({
+			url: 'server/getstudentdetails.php',
+			dataType: 'json',
+			data: { id: id },
+			method: 'post',
+			success: this.showStudentDetails,
+			error: this.handleError
+		});
+	}
+	createStudent_Server( name, course, grade, instructor, notes){
+		$.ajax({
+			url: 'server/createstudent.php',
+			data: {
+				name:name,
+				course:course,
+				grade: grade,
+				instructor: instructor,
+				notes, notes
+			},
+			dataType: 'json',
+			method: 'post',
+			success: (response)=>{
+				if(response.success){
+					this.getAllStudents_Server();
+				}
+				else{
+					this.handleError( response.error );
+				}
+			},
+			error: this.handleError
+		})
+	}
+	deleteStudent_Server( id ){
+		$.ajax({
+			url: 'server/deletestudent.php',
+			data: {
+				id:id
+			},
+			dataType: 'json',
+			method: 'post',
+			success: (response)=>{
+				if(response.success){
+					this.getAllStudents_Server();
+				}
+				else{
+					this.handleError( response.error );
+				}
+			},
+			error: this.handleError
+		})
+	}
+	showModal(content){
+		if(content!==undefined){
+			this.displayAreas.modalContent.empty().append(content);
+		}
+		this.displayAreas.modalShadow.show()
+	}
+	hideModal(){
+		this.displayAreas.modalShadow.hide();
 	}
 
 

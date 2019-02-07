@@ -13,23 +13,44 @@ class Student{
 		(function) deleteCallback - the removal function from the model to call when this student wants to be removed from the model's list
 	return: undefined (don't return undefined, it will screw it up a constructor, don't put a return)
 	*/
-	constructor(id, name, course, grade, deleteCallback=()=>{}){
+	//Student(id, name, course, grade, received, this.deleteStudent)
+	constructor(id, name, course, grade, added, notes, deleteCallback=()=>{}, clickCallback=()=>{}){
 		this.data = {
 			id: id,
 			name: name,
 			course: course,
-			grade: parseInt(grade)
+			notes: notes,
+			grade: parseInt(grade),
+			added: added
 		}
 		this.deleteCallback = deleteCallback;
+		this.clickCallback = clickCallback;
 		this.domElements = {
 			row: null,
 			name: null,
 			course: null,
+			added: null,
 			grade: null,
 			operations: null,
 			deleteButton: null
 		}
+		this.detailDomElements = {
+			container: null,
+			nameContainer: null,
+			nameText: null,
+			courseContainer: null,
+			courseText: null,
+			gradeContainer: null,
+			gradeText: null,
+			instructorContainer: null,
+			instructorText: null,
+			addedContainer: null,
+			addedText: null,
+			notesContainer: null,
+			notesText: null
+		}
 		this.handleDelete = this.handleDelete.bind( this );
+		this.handleRowClick = this.handleRowClick.bind( this );
 	}
 	/* update - change a value in the student record
 	purpose: ensure that the field is one that can be changed (either id, name, course, or grade)
@@ -45,11 +66,16 @@ class Student{
 	return: (boolean) true if it was changed, false if it was not
 	*/
 	update( field, value ){
-		var allowedFields = ['id', 'name', 'course', 'grade'];
+		var allowedFields = ['id', 'name', 'course', 'grade', 'notes', 'instructor', 'added'];
 		if( allowedFields.indexOf( field ) !== -1 ){
 			this.data[field] = value;
 			if( field !== 'id'){
-				this.domElements[field].text(value);
+				if(this.domElements.hasOwnProperty(field)){
+					this.domElements[field].text(value);
+				}
+				if(this.detailDomElements.hasOwnProperty(field)){
+					this.detailDomElements[field].text(value);
+				}
 			}
 			return true;
 		}
@@ -84,9 +110,11 @@ class Student{
 	*/
 	render(){
 		this.domElements.row = $("<tr>");
+		this.domElements.row.click( this.handleRowClick );
 		this.domElements.name = $("<td>").text( this.data.name );
 		this.domElements.course = $("<td>").text( this.data.course);
 		this.domElements.grade = $("<td>").text( this.data.grade );
+		this.domElements.added = $("<td>").text( this.data.added );
 		this.domElements.operations = $("<td>");
 		this.deleteButton = $("<button>",{
 			text: 'delete',
@@ -96,16 +124,52 @@ class Student{
 			}
 		});
 		this.domElements.operations.append( this.deleteButton );
-		this.domElements.row.append(this.domElements.name, this.domElements.course, this.domElements.grade , this.domElements.operations);
+		this.domElements.row.append(this.domElements.name, this.domElements.course, this.domElements.grade , this.domElements.added, this.domElements.operations);
 		return this.domElements.row;
+	}
+	renderDetails(){
+		this.detailDomElements = {
+			container: $("<div>").addClass('studentDetailsContainer'),
+			nameContainer: $("<div>").addClass('name').text('name'),
+			nameText: $("<div>").addClass('data').text(this.data.name),
+			courseContainer: $("<div>").addClass('course').text('course'),
+			courseText: $("<div>").addClass('data').text(this.data.course),
+			gradeContainer: $("<div>").addClass('grade').text('grade'),
+			gradeText: $("<div>").addClass('data').text(this.data.grade),
+			instructorContainer: $("<div>").addClass('instructor').text('instructor'),
+			instructorText: $("<div>").addClass('data').text(this.data.instructor),
+			addedContainer: $("<div>").addClass('completed').text('added'),
+			addedText: $("<div>").addClass('data').text(this.data.added),
+			notesContainer: $("<div>").addClass('notes').text('notes'),
+			notesText: $("<div>").addClass('data').text(this.data.notes)
+		}
+		this.detailDomElements.nameContainer.append( this.detailDomElements.nameText);
+		this.detailDomElements.courseContainer.append( this.detailDomElements.courseText);
+		this.detailDomElements.gradeContainer.append( this.detailDomElements.gradeText);
+		this.detailDomElements.instructorContainer.append( this.detailDomElements.instructorText);
+		this.detailDomElements.addedContainer.append( this.detailDomElements.addedText);
+		this.detailDomElements.notesContainer.append( this.detailDomElements.notesText);
+		this.detailDomElements.container.append(
+			this.detailDomElements.nameContainer,
+			this.detailDomElements.courseContainer,
+			this.detailDomElements.gradeContainer,
+			this.detailDomElements.instructorContainer,
+			this.detailDomElements.addedContainer,
+			this.detailDomElements.notesContainer
+		);
+		return this.detailDomElements.container;
 	}
 	/* handleDelete - call the model delete callback, and remove this student's dom element
 	purpose: 
 		call the callback that was passed into the constructor by the model - give it this object's reference
 		remove this object's dom element row to erase the entire dom element
 	*/
-	handleDelete(){
+	handleDelete(event){
 		this.deleteCallback( this.getData().id );
 		this.domElements.row.remove();
+	}
+	handleRowClick(){
+		event.stopPropagation();
+		this.clickCallback( this.getData().id );
 	}
 }
