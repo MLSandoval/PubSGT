@@ -17,6 +17,10 @@
 #displayArea tr:hover{
 	background-color: lightgreen;
 }
+#displayArea .btn-danger{
+	margin: 0 auto;
+	display: block;
+}
 
 /*modal info*/
 
