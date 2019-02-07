@@ -114,7 +114,7 @@ class SGT_template{
 			sum += this.data[index].getData().grade;
 		}
 		var average = sum / this.studentCount;
-		this.displayAreas.average.text( average );
+		this.displayAreas.average.text( average.toFixed(2) );
 	}
 	/* createStudent - take in data for a student, make a new Student object, and add it to this.data object
 
