@@ -47,8 +47,8 @@ class Student{
 	return: (boolean) true if it was changed, false if it was not
 	ESTIMATED TIME: 1.5 hours
 	*/
-	update(  ){
-
+	update(){
+		
 	}
 	/* getData - get all the student data as a simple object
 	params: none
@@ -60,7 +60,7 @@ class Student{
 	ESTIMATED TIME: 30 minutes
 	*/
 	getData(){
-		
+
 	}
 	/* render - create and return a table row (TR) with 4 table cells (TD) in them:
 		name : the student's name

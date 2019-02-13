@@ -4,7 +4,10 @@
 class SGT_template{
 	/* constructor - sets up sgt object 
 	params: (object) elementConfig - all pre-made dom elements used by the app
-	purpose: instantiates a model and stores it in the object
+	purpose: 
+		- Instantiates a model and stores pre-made dom elements it this object
+		- Additionally, will generate an object to store created students 
+		  who exists in our content management system (CMS)
 	return: undefined
 	ESTIMATED TIME: 1 hour
 	*/
@@ -21,7 +24,7 @@ class SGT_template{
 	addEventHandlers(){
 
 	}
-	/* clearInputs - take the three inputs and clear their values
+	/* clearInputs - take the three inputs stored in our constructor and clear their values
 	params: none
 	return: undefined
 	ESTIMATED TIME: 15 minutes
@@ -88,11 +91,9 @@ class SGT_template{
 	return: false if unsuccessful in adding student, true if successful
 	ESTIMATED TIME: 1.5 hours
 	*/
-	createStudent(){
-
-	}
+	createStudent(){}
 	/* doesStudentExist - 
-		deermines if a student exists by ID.  returns true if yes, false if no
+		determines if a student exists by ID.  returns true if yes, false if no
 	purpose: 
 			check if passed in ID is a value, if it exists in this.data, and return the presence of the student
 	params: 
