@@ -1,6 +1,6 @@
 # Version 0.1
 
-Version 1 is the starting point.  The HTML/CSS has already been made.  You will start from this version.
+Version 0.1 is the starting point.  The HTML/CSS has already been made.  You will start from this version.
 - it already has html
 - it already has bootstrap css
 - it has template files for the JS
@@ -60,13 +60,29 @@ Version 1 is the starting point.  The HTML/CSS has already been made.  You will 
 - take in parameters
 - store parameters into properties/methods
 
-### Version .51 - addEVentHandlers (15 minutes) - add eventhandlers to dom elements
+### Version .51 - addEventHandlers (15 minutes) - add eventhandlers to dom elements
 
 ### Version .52 - clearInputs (15 minutes) - clear the inputs on the dom
 
 ### Version .53 - handleCancel (15 minutes) - handle the click on the cancel button and clear the inputs
 
-### 
+### Version .54 - handleAdd (1 hour) - handle the click on the add button and adds the student from the inputs in the form
+
+### Version .55 - displayAllStudents (1.5 hours) - iterates through all students in the model and renders them to the dom
+
+### Version .56 - displayAverage (1.5 hours) - gets the average grade and displays it
+
+#
+
+### Version .75 - createStudent (1.5 hours) - generates a new student object and assigns an id for the new created student
+
+### Version .76 - doesStudentExist (45 minutes) - checks to see if a student exists from a given id
+
+### Version .77 - readStudent (45 minutes) - retrieves the data for one or all the students
+
+### Version .78 - updateStudent (30 minutes) - edits the values of one of our students given an id
+
+### Version .79 - deleteStudent (30 minutes) - deletes the data for one of our students given an id
 
 
 ## Getting Started
