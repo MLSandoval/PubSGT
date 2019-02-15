@@ -66,20 +66,20 @@ function student_tests(){
 			throw( new Error('render returned tr should have had 4 tds in it.  It only had ' + selectedChildren.length));
 		}
 		if(selectedChildren.eq(0).text()!==testStudent1.name){
-			throw( new Error(`render first td should have had the student name of ${testStudent1.name}, but it had ${selectedChildren.eq(0).text()}`));
+			throw( new Error(`render first td should have had the student name of ${testStudent1.name}, but it had ${selectedChildren.eq(0).text() ? selectedChildren.eq(0).text() : "<No text value available>"}`));
 		}
 		if(selectedChildren.eq(1).text()!==testStudent1.course){
-			throw( new Error(`render second td should have had the student course of ${testStudent1.course}, but it had ${selectedChildren.eq(1).text()}`));
+			throw( new Error(`render second td should have had the student course of ${testStudent1.course}, but it had ${selectedChildren.eq(1).text() ? selectedChildren.eq(1).text() : "<No text value available>"}`));
 		}
 		if(selectedChildren.eq(2).text()!=testStudent1.grade){
-			throw( new Error(`render third td should have had the student grade of ${testStudent1.grade}, but it had ${selectedChildren.eq(2).text()}`));
+			throw( new Error(`render third td should have had the student grade of ${testStudent1.grade}, but it had ${selectedChildren.eq(2).text() ? selectedChildren.eq(2).text() : "<No text value available>"}`));
 		}
 		var deleteButton = selectedChildren.eq(3).find('button');
 		if(deleteButton.length!==1){
 			throw( new Error(`render fourth td should have had a button inside of it, but didn't`));
 		}
 		if(deleteButton.text()!=='delete'){
-			throw( new Error(`render fourth td should have had a button with text of 'delete', but had ${deleteButton.text()}`));
+			throw( new Error(`render fourth td should have had a button with text of 'delete', but had ${deleteButton.text() ? deleteButton.text() : '<No text value available>'}`));
 		}
 
 	} catch( error ){
@@ -87,15 +87,18 @@ function student_tests(){
 		return;
 	}
 	try{
+		if(!student.domElements.row) {
+			throw( new Error(`Student domElements not storing the correct references for tr, consider revisiting Student render()`))
+		}
 		deleteButton.click();
 		if(testVal!==true){
-			throw( new Error(`delete button was called, but didn't properly execute callback function`));
+			throw( new Error(`delete button was clicked, but didn't properly execute its callback function. Your handleDelete function may not be calling the deleteCallback in the student model`));
 		}
 		if($("#displayArea > tr").length!==0){
 			throw( new Error(`Student's tr should be removed after delete called, but was not`))
 		}
 	} catch( error ){
-		displayMessage(['error with Student handleDelete(): ', error],'error');
+		displayMessage(['error with Student handleDelete()', error],'error');
 		return;
 	}
 
@@ -123,7 +126,7 @@ function student_tests(){
 			throw new Error('update of the student grade should have changed to type number, but getData returned a grade of type ' + typeof result.grade);
 		}
 		if(result.grade!=testStudent3.grade){
-			throw( new Error(`update should have updated the data property with the student grade to ${testStudent3.grade}, but getData returned ${result.grade}`));
+			throw( new Error(`update should have updated the data property with the student grade to ${testStudent3.grade}, but getData returned ${result.grade}. If the value is a number but a string datatype it is still a valid update`));
 		}
 		var selectedChildren = $("#displayArea tr td");
 		if(selectedChildren.length!==4){
@@ -216,13 +219,13 @@ function sgt_tests(){
 	try{
 		testSGT.clearInputs();
 		if(elementSelectors.nameInput.val()!==''){
-			throw new Error(`called clearInput: name input value should be '', but is ${elementSelectors.nameInput.val()}`)
+			throw new Error(`called clearInputs: name input value should be '', but is ${elementSelectors.nameInput.val()}`)
 		}
 		if(elementSelectors.courseInput.val()!==''){
-			throw new Error(`called clearInput: course input value should be '', but is ${elementSelectors.courseInput.val()}`)
+			throw new Error(`called clearInputs: course input value should be '', but is ${elementSelectors.courseInput.val()}`)
 		}
 		if(elementSelectors.gradeInput.val()!==''){
-			throw new Error(`called clearInput: grade input value should be '', but is ${elementSelectors.gradeInput.val()}`)
+			throw new Error(`called clearInputs: grade input value should be '', but is ${elementSelectors.gradeInput.val()}`)
 		}
 		elementSelectors.nameInput.val('name');
 		elementSelectors.courseInput.val('course');
@@ -232,7 +235,13 @@ function sgt_tests(){
 			throw new Error(`cancel button was pressed, but the name, course, and grade inputs were not cleared.  Cancel button should call clearInputs`)
 		}
 	} catch( error ){
-		displayMessage(['error with SGT clearInput: ',error],'error');
+		let message = [error]
+		if (error.message.includes('is not a function')) {
+			message = 'error with SGT clearInputs: the `this` keyword is not referencing the SGT_template, consider using .bind within the constructor';
+		} else {	
+			message = 'error with SGT clearInputs: ';
+		}
+		displayMessage([message ,error],'error');
 		return false;
 	}
 	displayMessage('SGT clearInputs passed','green');
@@ -274,29 +283,28 @@ function sgt_tests(){
 		if(items.length!==4){
 			throw new Error(`SGT_template was given another student, again with no id. (createStudent('student5','math',50)), should now have 4 items, but had ${items.length}`)
 		}
-		if(testSGT.data['4']===undefined){
-			throw new Error(`SGT_template was given another student with no id, but the next id slot was taken by a previous entry.  It should have added this student at the next available ID of 4, but did not`)
+		if(testSGT.data['5']===undefined){
+			throw new Error(`SGT_template was given another student with no id, but the next id slot was taken by a previous entry.  It should have added this student at the next available ID of 5, but did not`)
 		}
-		if(testSGT.data['4'].getData().name!=='student5'){
-			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a name of student5, but had ${testSGT.data['4'].getData().name}`)
+		if(testSGT.data['5'].getData().name!=='student5'){
+			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a name of student5, but had ${testSGT.data['5'].getData().name}`)
 		}
-		if(testSGT.data['4'].getData().course!=='math'){
-			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a course of math, but had ${testSGT.data['4'].getData().course}`)
+		if(testSGT.data['5'].getData().course!=='math'){
+			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a course of math, but had ${testSGT.data['5'].getData().course}`)
 		}
-		if(typeof testSGT.data['4'].getData().grade !== 'number'){
-			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a grade of type ${typeof testSGT.data['4'].getData().grade}`)
+		if(typeof testSGT.data['5'].getData().grade !== 'number'){
+			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a grade of type ${typeof testSGT.data['5'].getData().grade}`)
 		}
-		if(testSGT.data['4'].getData().grade !== 50){
-			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a grade of number 50, but had ${testSGT.data['4'].getData().grade}`)
+		if(testSGT.data['5'].getData().grade !== 50){
+			throw new Error(`SGT_template student was added with the following: createStudent('student5','math',50).  Should have had a grade of number 50, but had ${testSGT.data['5'].getData().grade}`)
 		}
 		elementSelectors.nameInput.val('name');
 		elementSelectors.courseInput.val('course');
 		elementSelectors.gradeInput.val(100);
 		elementSelectors.addButton.click();
 		items = Object.values(testSGT.data);
-		var studentData = testSGT.data[5].getData();
+		var studentData = testSGT.data[6].getData();
 		console.log(studentData);
-		var dom = $("#displayArea > tr:nth-of-type(5)");
 		if(items.length!==5){
 			throw new Error(`SGT_template createStudent should have been triggered by button 'add' being clicked.  Either function wasn't triggered, or createStudent didn't get proper data from inputs`)
 		}
@@ -510,8 +518,9 @@ function displayMessage(message, type='error'){
 		// var lineNumber = /tests\.js:(\d+)/.exec(stackOutput.stack)[1];
 		// var preppedMessage = `tests.js: line ${lineNumber} ${modalMessage}`;
 		console.error(modalMessage);
+		console.warn(wholeMessage);
 		preppedMessage = modalMessage;
-		var advisor = $("<div>").text('CHECK CONSOLE FOR MORE INFO.').addClass('errorMessage')
+		var advisor = $("<div>").text('CHECK CONSOLE FOR MORE INFO').addClass('errorMessage')
 	} else {
 		preppedMessage = modalMessage;
 		console.log(wholeMessage);
