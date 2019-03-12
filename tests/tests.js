@@ -470,7 +470,7 @@ function sgt_tests(){
 		if($("#displayArea tr").length===5){
 			throw new Error(`delete button on fourth student ("name") was clicked, but a row wasn't deleted`);
 		}
-		if(beforeAllStudents.length === afterAllStudents.length+1){
+		if(beforeAllStudents.length === afterAllStudents.length){
 			throw new Error(`delete button on fourth student ("name") was clicked, but there are still ${beforeAllStudents.length} students in the SGT `);
 		}
 		if($("#displayArea tr td").eq(0).text()==='student3'){
