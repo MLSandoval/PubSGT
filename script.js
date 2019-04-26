@@ -1,7 +1,7 @@
-/* information about jsdocs: 
+/* information about jsdocs:
 * param: http://usejsdoc.org/tags-param.html#examples
 * returns: http://usejsdoc.org/tags-returns.html
-* 
+*
 /**
  * Listen for the document to load and initialize the application
  */
@@ -10,7 +10,8 @@ $(document).ready( startApp );
 var SGT;
 function startApp(){
 	/*
-	startTests will test your code.  Once it works, 
+	startTests will test your code.
+	Once you pass all of the tests,
 	delete startTests and uncomment the code below to run YOUR code and test it
 	*/
 	intiateTestDisplay();
@@ -27,7 +28,3 @@ function startApp(){
 	// });
 	// SGT.addEventHandlers();
 }
-
-
-
-
