@@ -9,16 +9,16 @@ class SGT_template{
 	return: undefined
 	*/
 	constructor(  ){
-		
+		this.elementConfig = {}; //all pre-made dom elements used by the app
 
 	}
+
 	/* addEventHandlers - add event handlers to premade dom elements
 	adds click handlers to add and cancel buttons using the dom elements passed into constructor
 	params: none
 	return: undefined
 	ESTIMATED TIME: 15 minutes
 	*/
-
 	addEventHandlers(){
 
 

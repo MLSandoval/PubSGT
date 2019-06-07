@@ -31,7 +31,7 @@ class Student{
 			operations: null,
 			deleteButton: null
 		};
-		this.handleDelete = this.handleDelete.bind( this );
+		this.handleDelete = this.handleDelete.bind(this);
 		this.render = this.render.bind(this);
 	}
 
@@ -45,7 +45,7 @@ class Student{
 	ESTIMATED TIME: 30 minutes
 	*/
 	getData(){
-
+		return this.data;
 	}
 
 	/* render - create and return a table row (TR) with 4 table cells (TD) in them:
@@ -58,14 +58,32 @@ class Student{
 		put the 4 TDs inside the TR.
 		Add the button to the operation TD
 		add the StudentRecord's handleDelete method to the delete button's click handler
-		store all these values for any needed changes later
+		store all these elements for later use
 		return the TR
 	params: none
 	return: (jquery dom element) the row that contains the student dom elements
 	ESTIMATED TIME: 2 hours
 	*/
 	render(){
+		var TR = $('<tr>');
+		var TD0 = $('<td>').text(this.data.name);
+		var TD1 = $('<td>').text(this.data.course);
+		var TD2 = $('<td>').text(this.data.grade);
+		var TD3 = $('<td>');
 
+		// var delBut = $('<button>').on('click', this.handleDelete);
+
+		TD3.append($('<button>').on('click', this.handleDelete).text('delete'));
+
+		TR.append(TD0).append(TD1).append(TD2).append(TD3);
+
+		this.domElements.row = TR;
+		this.domElements.name = TD0;
+		this.domElements.course = TD1;
+		this.domElements.grade = TD2;
+		this.domElements.deleteButton = TD3;
+
+		return TR;
 	}
 
 	/* handleDelete - call the SGT_template delete callback, and remove this student's dom element
@@ -75,7 +93,8 @@ class Student{
 	ESTIMATED TIME: 15 minutes
 	*/
 	handleDelete(){
-
+		this.deleteCallback(this.data.id);
+		this.domElements.row.remove();
 	}
 
 	/* update - change a value in the student record
@@ -92,9 +111,21 @@ class Student{
 	return: (boolean) true if it was changed, false if it was not
 	ESTIMATED TIME: 1.5 hours
 	*/
-	update( ){
+	update(string, multiple){
+		console.log('string', string);
+		console.log('multiple: ', multiple)
+		if(this.data[string]){
+			console.log('this.data[string]', this.data[string]);
+			if(string === 'grade'){
+				this.data[string] = parseInt(multiple);
+			}else{
+				this.data[string] = multiple;
+			}
 
-		
-
+			this.domElements[string].text(this.data[string])
+			return true;
+		}else{
+			return false;
+		}
 	}
 }
