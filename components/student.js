@@ -112,20 +112,17 @@ class Student{
 	ESTIMATED TIME: 1.5 hours
 	*/
 	update(string, multiple){
-		console.log('string', string);
-		console.log('multiple: ', multiple)
+
 		if(this.data[string]){
-			console.log('this.data[string]', this.data[string]);
 			if(string === 'grade'){
 				this.data[string] = parseInt(multiple);
 			}else{
 				this.data[string] = multiple;
 			}
-
 			this.domElements[string].text(this.data[string])
 			return true;
 		}else{
 			return false;
-		}
+		};
 	}
 }
