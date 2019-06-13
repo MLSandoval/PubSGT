@@ -8,9 +8,20 @@ class SGT_template{
 		and uses those reference for later portions of the application
 	return: undefined
 	*/
-	constructor(  ){
+	constructor(domEleObj){
+		this.displayAllStudents = this.displayAllStudents.bind(this);
+		this.readStudent = this.readStudent.bind(this);
+		this.handleAdd = this.handleAdd.bind(this);
+		this.handleCancel = this.handleCancel.bind(this);
+
 		this.elementConfig = {}; //all pre-made dom elements used by the app
 
+		for (var key in domEleObj){
+			this.elementConfig[key] = domEleObj[key];
+		};
+
+		this.data = {};
+		
 	}
 
 	/* addEventHandlers - add event handlers to premade dom elements
@@ -20,8 +31,8 @@ class SGT_template{
 	ESTIMATED TIME: 15 minutes
 	*/
 	addEventHandlers(){
-
-
+		this.elementConfig.addButton.on('click', this.handleAdd);
+		this.elementConfig.cancelButton.on('click', this.handleCancel);
 	}
 
 	/* clearInputs - take the three inputs and clear their values
@@ -30,7 +41,9 @@ class SGT_template{
 	ESTIMATED TIME: 15 minutes
 	*/
 	clearInputs(){
-
+		this.elementConfig.nameInput.val('');
+		this.elementConfig.courseInput.val('');
+		this.elementConfig.gradeInput.val('');
 	}
 
 	/* handleCancel - function to handle the cancel button press
@@ -39,7 +52,7 @@ class SGT_template{
 	ESTIMATED TIME: 15 minutes
 	*/
 	handleCancel(){
-
+		this.clearInputs();
 	}
 
 	/* createStudent - take in data for a student, make a new Student object, and add it to this.data object
@@ -60,12 +73,27 @@ class SGT_template{
 	return: false if unsuccessful in adding student, true if successful
 	ESTIMATED TIME: 1.5 hours
 	*/
-	createStudent(){
+	createStudent(name, course, grade, id, deleteCallback){
+		debugger;
+		console.log('this.elementConfig: ', this.elementConfig);
+		
+		if(id === undefined){
+			id = 1;
+		}else if(this.data[id]){
+			return false;
+		};
+		
+		while (this.data.hasOwnProperty(`${id}`)) {
+			id++;
+		};
 
+		this.data[id] = new Student(id, name, course, grade, deleteCallback);
+
+		return true;
 	}
 
 	/* doesStudentExist -
-		deermines if a student exists by ID.  returns true if yes, false if no
+		determines if a student exists by ID.  returns true if yes, false if no
 	purpose:
 			check if passed in ID is a value, if it exists in this.data, and return the presence of the student
 	params:
@@ -73,8 +101,12 @@ class SGT_template{
 	return: false if id is undefined or that student doesn't exist, true if the student does exist
 	ESTIMATED TIME: 15 minutes
 	*/
-	doesStudentExist(){
-
+	doesStudentExist(id){
+		console.log('doesStudentExist');
+		if(this.data[id]){
+			return true;
+		};
+		return false;
 	}
 
 	/* handleAdd - function to handle the add button click
@@ -84,7 +116,16 @@ class SGT_template{
 	ESTIMATED TIME: 1 hour
 	*/
 	handleAdd(){
+		
+		var name = this.elementConfig.nameInput.val();
+		var course = this.elementConfig.courseInput.val();
+		var grade = this.elementConfig.gradeInput.val();
 
+		console.log('name val, course val, grade val: ', name, course, grade);
+		
+		this.createStudent(name, course, grade);
+		this.clearInputs();
+		this.displayAllStudents();
 	}
 
 	/* readStudent -
@@ -99,8 +140,17 @@ class SGT_template{
 		a singular Student object if an ID was given, an array of Student objects if no ID was given
 		ESTIMATED TIME: 45 minutes
 	*/
-	readStudent(){
+	readStudent(id){
+		
+		if(id === undefined){
+			return Object.values(this.data);
 
+		}else if(this.data[id]){
+			return this.data[id];
+
+		}else if(!this.data[id]){
+			return false;
+		};
 	}
 
 	/* displayAllStudents - iterate through all students in the this.data object
@@ -116,6 +166,27 @@ class SGT_template{
 	ESTIMATED TIME: 1.5 hours
 	*/
 	displayAllStudents(){
+	
+		var studentList = this.data;
+		this.elementConfig.displayArea.empty();
+
+		var i = 0;
+		var total = 0;
+
+		for(var key in studentList){
+
+			studentList[key].render();
+
+			console.log('studentList render: ', studentList[key].render());
+
+			for(var key1 in studentList[key].domElements)
+				this.elementConfig.displayArea.append(studentList[key].domElements[key1]);
+
+			total += studentList[key].data.grade;
+			i++;
+		};
+
+		this.data.average = total / i;
 
 	}
 
@@ -125,9 +196,8 @@ class SGT_template{
 	return: undefined
 	ESTIMATED TIME: 15 minutes
 	*/
-
 	displayAverage(){
-
+		this.elementConfig.averageArea.text(this.data.average);
 	}
 
 	/* deleteStudent -

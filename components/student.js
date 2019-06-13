@@ -17,11 +17,12 @@ class Student{
 	constructor(id, name, course, grade, deleteCallback=()=>{}){
 		//this method has been built out to help you understand the general structure better
 		this.data = {
-			id: id,
+			id: parseInt(id),
 			name: name,
 			course: course,
 			grade: parseInt(grade)
 		};
+
 		this.deleteCallback = deleteCallback;
 		this.domElements = {
 			row: null,
@@ -65,6 +66,7 @@ class Student{
 	ESTIMATED TIME: 2 hours
 	*/
 	render(){
+		
 		var TR = $('<tr>');
 		var TD0 = $('<td>').text(this.data.name);
 		var TD1 = $('<td>').text(this.data.course);
@@ -93,6 +95,7 @@ class Student{
 	ESTIMATED TIME: 15 minutes
 	*/
 	handleDelete(){
+		
 		this.deleteCallback(this.data.id);
 		this.domElements.row.remove();
 	}
