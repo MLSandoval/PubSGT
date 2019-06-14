@@ -13,7 +13,9 @@ class SGT_template{
 		this.readStudent = this.readStudent.bind(this);
 		this.handleAdd = this.handleAdd.bind(this);
 		this.handleCancel = this.handleCancel.bind(this);
+		this.deleteStudent = this.deleteStudent.bind(this);
 
+		this.average = 0;
 		this.elementConfig = {}; //all pre-made dom elements used by the app
 
 		for (var key in domEleObj){
@@ -74,7 +76,8 @@ class SGT_template{
 	ESTIMATED TIME: 1.5 hours
 	*/
 	createStudent(name, course, grade, id, deleteCallback){
-		debugger;
+
+		
 		console.log('this.elementConfig: ', this.elementConfig);
 		
 		if(id === undefined){
@@ -87,7 +90,7 @@ class SGT_template{
 			id++;
 		};
 
-		this.data[id] = new Student(id, name, course, grade, deleteCallback);
+		this.data[id] = new Student(id, name, course, grade, this.deleteStudent);
 
 		return true;
 	}
@@ -102,7 +105,6 @@ class SGT_template{
 	ESTIMATED TIME: 15 minutes
 	*/
 	doesStudentExist(id){
-		console.log('doesStudentExist');
 		if(this.data[id]){
 			return true;
 		};
@@ -121,8 +123,6 @@ class SGT_template{
 		var course = this.elementConfig.courseInput.val();
 		var grade = this.elementConfig.gradeInput.val();
 
-		console.log('name val, course val, grade val: ', name, course, grade);
-		
 		this.createStudent(name, course, grade);
 		this.clearInputs();
 		this.displayAllStudents();
@@ -166,9 +166,9 @@ class SGT_template{
 	ESTIMATED TIME: 1.5 hours
 	*/
 	displayAllStudents(){
-	
+		
 		var studentList = this.data;
-		this.elementConfig.displayArea.empty();
+		var display = this.elementConfig.displayArea.empty();
 
 		var i = 0;
 		var total = 0;
@@ -177,16 +177,14 @@ class SGT_template{
 
 			studentList[key].render();
 
-			console.log('studentList render: ', studentList[key].render());
-
-			for(var key1 in studentList[key].domElements)
-				this.elementConfig.displayArea.append(studentList[key].domElements[key1]);
+			display.append(studentList[key].domElements.row);
 
 			total += studentList[key].data.grade;
 			i++;
 		};
-
-		this.data.average = total / i;
+		
+		this.average = (total / i).toFixed(2);
+		this.displayAverage();
 
 	}
 
@@ -197,7 +195,7 @@ class SGT_template{
 	ESTIMATED TIME: 15 minutes
 	*/
 	displayAverage(){
-		this.elementConfig.averageArea.text(this.data.average);
+		this.elementConfig.averageArea.text(this.average);
 	}
 
 	/* deleteStudent -
@@ -213,8 +211,24 @@ class SGT_template{
 		true if it was successful, false if not
 		ESTIMATED TIME: 30 minutes
 	*/
-	deleteStudent(){
+	deleteStudent(id, event){
+		// console.log('event.currentTarget: ', event.currentTarget)
+		// if(event.currentTarget)
+		console.log('This is deleteStudent:', this);
+		debugger;
+		if(this.data[id]){
+			// console.log("this.data[0].domElements: ", this.data[1].domElements);
+			// console.log("id: ", id);
+			// console.log("this.data[id].domElements: ", this.data[id].domElements);
+			console.log('deleteStudent: ', this);
 
+			// this.data[id].handleDelete();
+			delete this.data[id];
+
+			return true;
+		};
+
+		return false;
 	}
 
 	/* updateStudent -
@@ -233,7 +247,7 @@ class SGT_template{
 		true if it updated, false if it did not
 		ESTIMATED TIME: no needed for first versions: 30 minutes
 	*/
-	updateStudent(){
+	updateStudent(id, targetField, value){
 
 	}
 
