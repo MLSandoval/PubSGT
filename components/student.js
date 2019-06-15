@@ -95,7 +95,7 @@ class Student{
 	ESTIMATED TIME: 15 minutes
 	*/
 	handleDelete(){
-		debugger;
+		
 		this.deleteCallback(this.data.id);
 
 		// if(this.domElements.row)
