@@ -14,9 +14,12 @@ class SGT_template{
 		this.handleAdd = this.handleAdd.bind(this);
 		this.handleCancel = this.handleCancel.bind(this);
 		this.deleteStudent = this.deleteStudent.bind(this);
+		this.retrieveSuccess = this.retrieveSuccess.bind(this);
+		this.retrieveStudentData = this.retrieveStudentData.bind(this);
 
 		this.average = 0;
 		this.elementConfig = {}; //all pre-made dom elements used by the app
+		this.elementConfig.retrieveButton = $('#retrieveButton');
 
 		for (var key in domEleObj){
 			this.elementConfig[key] = domEleObj[key];
@@ -35,6 +38,8 @@ class SGT_template{
 	addEventHandlers(){
 		this.elementConfig.addButton.on('click', this.handleAdd);
 		this.elementConfig.cancelButton.on('click', this.handleCancel);
+		this.elementConfig.retrieveButton.on('click', this.retrieveStudentData);
+		
 	}
 
 	/* clearInputs - take the three inputs and clear their values
@@ -77,9 +82,6 @@ class SGT_template{
 	*/
 	createStudent(name, course, grade, id, deleteCallback){
 
-		
-		console.log('this.elementConfig: ', this.elementConfig);
-		
 		if(id === undefined){
 			id = 1;
 		}else if(this.data[id]){
@@ -118,13 +120,16 @@ class SGT_template{
 	ESTIMATED TIME: 1 hour
 	*/
 	handleAdd(){
-		
+		if (!this.elementConfig.nameInput.val())
+			return;
 		var name = this.elementConfig.nameInput.val();
 		var course = this.elementConfig.courseInput.val();
 		var grade = this.elementConfig.gradeInput.val();
 
 		this.createStudent(name, course, grade);
 		this.clearInputs();
+
+		this.elementConfig.displayArea.empty();
 		this.displayAllStudents();
 	}
 
@@ -212,17 +217,9 @@ class SGT_template{
 		ESTIMATED TIME: 30 minutes
 	*/
 	deleteStudent(id, event){
-		// console.log('event.currentTarget: ', event.currentTarget)
-		// if(event.currentTarget)
-		console.log('This is deleteStudent:', this);
-		debugger;
+		
 		if(this.data[id]){
-			// console.log("this.data[0].domElements: ", this.data[1].domElements);
-			// console.log("id: ", id);
-			// console.log("this.data[id].domElements: ", this.data[id].domElements);
-			console.log('deleteStudent: ', this);
 
-			// this.data[id].handleDelete();
 			delete this.data[id];
 
 			return true;
@@ -251,5 +248,41 @@ class SGT_template{
 
 	}
 
+	retrieveSuccess(object){
 
+		if(object === undefined){
+			console.log('Server contacted successfully, error retrieving data object.')
+		}else{
+			console.log("object: ", object);
+			console.log('this: ', this);
+			for(var i = 0; i < object.data.length; i++){
+				var name = object.data[i].name;
+				var grade = object.data[i].grade;
+				var course = object.data[i].course;
+				var id = object.data[i].id;
+
+				this.createStudent(name, course, grade, id);
+			};
+			console.log('all students created and added')
+			this.displayAllStudents();
+			this.displayAverage();
+		};
+	}
+
+	retrieveStudentData(){
+
+		var ajaxConfig = {
+			url: 'http://s-apis.learningfuze.com/sgt/get',
+			method: 'post',
+			dataType: 'json',
+			data: { api_key: 'tC57qwUCPI'},
+			success: this.retrieveSuccess,
+			error: function(){
+				console.log('Error on ajax call');
+			}
+		};
+
+		$.ajax(ajaxConfig);
+	}
 }
+
