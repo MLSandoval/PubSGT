@@ -16,7 +16,7 @@ class SGT_template{
 		this.deleteStudent = this.deleteStudent.bind(this);
 		this.retrieveSuccess = this.retrieveSuccess.bind(this);
 		this.retrieveStudentData = this.retrieveStudentData.bind(this);
-		// this.deleteStudentData = this.deleteStudentData.bind(this);
+		this.deleteStudentData = this.deleteStudentData.bind(this);
 
 		this.average = 0;
 		this.elementConfig = {}; //all pre-made dom elements used by the app
@@ -93,7 +93,7 @@ class SGT_template{
 			id++;
 		};
 
-		this.data[id] = new Student(id, name, course, grade, this.deleteStudentAjaxHandler);
+		this.data[id] = new Student(id, name, course, grade, this.deleteStudent);
 
 
 
@@ -251,35 +251,36 @@ class SGT_template{
 		if(this.data[id]){
 
 			delete this.data[id];
-
+			this.deleteStudentData(id);
 			return true;
 		};
 
 		return false;
 	}
 
-	// deleteSuccess(data, status, xhr){
-	// 	console.log('data: ', data);
-	// 	console.log('status: ', status);
-	// 	console.log('xhr: ', xhr);
+	deleteSuccess(data, status, xhr){
+		console.log('data: ', data);
+		console.log('status: ', status);
+		console.log('xhr: ', xhr);
 
-	// }
+	}
 
-	// deleteStudentData(){
+	deleteStudentData(id){
 
-	// 	var ajaxConfig = {
-	// 		url: 'http://s-apis.learningfuze.com/sgt/delete',
-	// 		method: 'post',
-	// 		dataType: 'json',
-	// 		data: { api_key: 'tC57qwUCPI' },
-	// 		success: this.deleteSuccess,
-	// 		error: function () {
-	// 			console.log('Error on ajax call');
-	// 		}
-	// 	};
+		var ajaxConfig = {
+			url: 'http://s-apis.learningfuze.com/sgt/delete',
+			method: 'post',
+			dataType: 'json',
+			data: { api_key: 'tC57qwUCPI', student_id: id},
+			success: this.deleteSuccess,
+			error: function () {
+				console.log('Error on ajax call');
+			},
+			complete: function(){console.log('deleteStudentDataComplete')}
+		};
 
-	// 	$.ajax(ajaxConfig);
-	// }
+		$.ajax(ajaxConfig);
+	}
 
 	/* updateStudent -
 		not used for now.  Will be used later
