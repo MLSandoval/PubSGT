@@ -1,0 +1,17 @@
+{
+    "success": true,
+    "data": [
+        {
+            "id": 1,
+            "name": "Kyle Apostol",
+            "grade": 80,
+            "course": "Going postal"
+        },
+        {
+            "id": 2,
+            "name": "Lawrence Tran",
+            "grade": 90,
+            "course": "Fade cuts"
+        }
+    ]
+}
