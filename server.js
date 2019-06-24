@@ -2,6 +2,9 @@
 const express = require('express');
 const fs = require('fs');
 const mysql = require('mysql');
+const creds = require('./mysql_credentials.js');
+
+const db = mysql.createConnection(creds);
 
 const server = express();
 
@@ -18,8 +21,22 @@ server.get('/myFirstEndpoint', function(request, response){
 });
 
 server.get('/getstudents', function(request, response){
-    const data = fs.readFileSync(__dirname + '/dummydata/getstudents.json');
-    response.send(data);
+    db.connect(function(){
+        var query = "SELECT * FROM `grades`";
+        db.query(query, function(error, data, fields){
+            if(!error){
+                response.send({
+                    success: true,
+                    data
+                })
+            }else{
+                console.log('error: ', error);
+            }
+        })
+    });
+    // dummyData example to make endpoint work from local file instead of a database
+    // const data = fs.readFileSync(__dirname + '/dummydata/getstudents.json');
+    // response.send(data);
 });
 
 server.listen(3001, function(){
@@ -27,7 +44,7 @@ server.listen(3001, function(){
     //response.send('listened to port 3001 successfully.');
 });
 
-server.read('/readstudents', function(request, response){
-    const mysql = fs.readFileSync(__dirname + '/')
-    response.send(data);
-});
+// server.read('/readstudents', function(request, response){
+//     const mysql = fs.readFileSync(__dirname + '/')
+//     response.send(data);
+// });
