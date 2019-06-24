@@ -1,6 +1,7 @@
 
 const express = require('express');
 const fs = require('fs');
+const mysql = require('mysql');
 
 const server = express();
 
@@ -16,7 +17,7 @@ server.get('/myFirstEndpoint', function(request, response){
     response.send('this is your endpoint. bro. sick: ' + Date.now());
 });
 
-server.get('/getstudents', function(request,response){
+server.get('/getstudents', function(request, response){
     const data = fs.readFileSync(__dirname + '/dummydata/getstudents.json');
     response.send(data);
 });
@@ -26,3 +27,7 @@ server.listen(3001, function(){
     //response.send('listened to port 3001 successfully.');
 });
 
+server.read('/readstudents', function(request, response){
+    const mysql = fs.readFileSync(__dirname + '/')
+    response.send(data);
+});
