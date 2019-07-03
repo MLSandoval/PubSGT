@@ -36,7 +36,7 @@ class Student{
 		this.render = this.render.bind(this);
 	}
 
-	/* getData - get all the student data as a simple object
+	/* getdata - get all the student data as a simple object
 	params: none
 	return: (object) an object with the following data
 		(number): id
@@ -45,47 +45,47 @@ class Student{
 		(number): grade
 	ESTIMATED TIME: 30 minutes
 	*/
-	getData(){
+	getdata(){
 		return this.data;
 	}
 
-	/* render - create and return a table row (TR) with 4 table cells (TD) in them:
+	/* render - create and return a table row (tr) with 4 table cells (td) in them:
 		name : the student's name
 		course : the student's course
 		grade: the student's grade
 		operations: holds any buttons for the student - will hold a delete button
 	purpose:
-		create the TR and 4 TDs,
-		put the 4 TDs inside the TR.
-		Add the button to the operation TD
-		add the StudentRecord's handleDelete method to the delete button's click handler
+		create the tr and 4 tds,
+		put the 4 tds inside the tr.
+		Add the button to the operation td
+		add the Studentrecord's handleDelete method to the delete button's click handler
 		store all these elements for later use
-		return the TR
+		return the tr
 	params: none
 	return: (jquery dom element) the row that contains the student dom elements
 	ESTIMATED TIME: 2 hours
 	*/
 	render(){
 		
-		var TR = $('<tr>');
-		var TD0 = $('<td>').text(this.data.name);
-		var TD1 = $('<td>').text(this.data.course);
-		var TD2 = $('<td>').text(this.data.grade);
-		var TD3 = $('<td>');
+		var tr = $('<tr>');
+		var td0 = $('<td>').text(this.data.name);
+		var td1 = $('<td>').text(this.data.course);
+		var td2 = $('<td>').text(this.data.grade);
+		var td3 = $('<td>');
 
 		// var delBut = $('<button>').on('click', this.handleDelete);
 
-		TD3.append($('<button>').on('click', this.handleDelete).text('delete'));
+		td3.append($('<button>').on('click', this.handleDelete).text('delete'));
 
-		TR.append(TD0).append(TD1).append(TD2).append(TD3);
+		tr.append(td0).append(td1).append(td2).append(td3);
 
-		this.domElements.row = TR;
-		this.domElements.name = TD0;
-		this.domElements.course = TD1;
-		this.domElements.grade = TD2;
-		this.domElements.deleteButton = TD3;
+		this.domElements.row = tr;
+		this.domElements.name = td0;
+		this.domElements.course = td1;
+		this.domElements.grade = td2;
+		this.domElements.deleteButton = td3;
 
-		return TR;
+		return tr;
 	}
 
 	/* handleDelete - call the SGT_template delete callback, and remove this student's dom element
@@ -108,7 +108,7 @@ class Student{
 		otherwise update the value
 			save the value into the properties stored in the constructor
 			go to the dom element of the appropriate field and change the text
-				(for example, if name was changed, go to the student's name TD and change the name as well)
+				(for example, if name was changed, go to the student's name td and change the name as well)
 			and return true
 	params:
 		(string) field - the field in the object to change

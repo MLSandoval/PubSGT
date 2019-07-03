@@ -95,8 +95,6 @@ class SGT_template{
 
 		this.data[id] = new Student(id, name, course, grade, this.deleteStudent);
 
-
-
 		return this.data[id];
 	}
 
@@ -143,10 +141,14 @@ class SGT_template{
 	addStudentToServer(name, course, grade){
 
 		var ajaxConfig = {
-			url: 'http://s-apis.learningfuze.com/sgt/create',
-			method: 'post',
+			url: '/addstudent',
+			method: 'put',
 			dataType: 'json',
-			data: { api_key: 'tC57qwUCPI', name: name, course: course, grade: grade },
+			data: { 
+				// api_key: 'tC57qwUCPI', 
+				name: name, 
+				course: course, 
+				grade: grade },
 			success: function(data, status, xhr){
 				console.log('data: ', data);
 				console.log('status: ', status);
@@ -268,10 +270,10 @@ class SGT_template{
 	deleteStudentData(id){
 
 		var ajaxConfig = {
-			url: 'http://s-apis.learningfuze.com/sgt/delete',
-			method: 'post',
+			url: '/deletestudent',
+			method: 'delete',
 			dataType: 'json',
-			data: { api_key: 'tC57qwUCPI', student_id: id},
+			data: {student_id: id},
 			success: this.deleteSuccess,
 			error: function () {
 				console.log('Error on ajax call');
@@ -333,7 +335,7 @@ class SGT_template{
 			//method: 'post',
 			method: 'get',
 			dataType: 'json',
-			data: { api_key: 'tC57qwUCPI'},
+			//data: { api_key: 'tC57qwUCPI'},
 			success: this.retrieveSuccess,
 			error: function(){
 				console.log('Error on ajax call');
