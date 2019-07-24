@@ -20,6 +20,23 @@ server.listen(3001, function () {
     //response.send('listened to port 3001 successfully.');
 });
 
+
+server.post('/twitchlisten', (request, response) => {
+    console.log('this is your endpoint. bro. sick.' + request.url);
+    response.send('this is your endpoint. bro. sick: ' + Date.now());
+
+
+    console.log('request: ', request);
+    console.log('response: ', response);
+});
+
+
+
+
+
+
+
+
 //endpoint training wheels, no real function to this 
 server.get('/myFirstEndpoint', function(request, response){
     console.log('this is your endpoint. bro. sick.' + request.url);
