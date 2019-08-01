@@ -1,4 +1,4 @@
-
+const http = require('http');
 const express = require('express');
 const fs = require('fs');
 const mysql = require('mysql');
@@ -17,17 +17,38 @@ server.use(staticMiddlewareFunction);
 
 server.listen(3001, function () {
     console.log('listened to port 3001 successfully.');
-    //response.send('listened to port 3001 successfully.');
+    // response.send('listened to port 3001 successfully.');
 });
 
+// if(request.method === 'get'){
+//     console.log('get request recieved.');
+//     console.log(request);
 
-server.post('/twitchlisten', (request, response) => {
-    console.log('this is your endpoint. bro. sick.' + request.url);
-    response.send('this is your endpoint. bro. sick: ' + Date.now());
+// }else if(request.method === 'post'){
+//     console.log('post request recieved.');
+//     console.log(request);
+// }
 
 
-    console.log('request: ', request);
-    console.log('response: ', response);
+//hub.challenge
+server.get('/twitchlisten', (request, response) =>{
+    console.log('twitchlisten get request received: ', request);
+    
+    
+    response.status(200).send('ok', 'get request twitchlisten goooood', request);
+    return request;
+
+});
+
+server.post('/twitchlisten', (req, res) => {
+    // console.log('this is your endpoint. bro. sick.' + request.url);
+    // res.send('this is your endpoint. bro. sick: ' + Date.now());
+    console.log('req: ', req);
+    console.log('res: ', res);
+
+    // response.status(200).send('ok');
+    res.write('post request twitchlisten good');
+    
 });
 
 
@@ -40,7 +61,8 @@ server.post('/twitchlisten', (request, response) => {
 //endpoint training wheels, no real function to this 
 server.get('/myFirstEndpoint', function(request, response){
     console.log('this is your endpoint. bro. sick.' + request.url);
-    response.send('this is your endpoint. bro. sick: ' + Date.now());
+    console.log('REQUEST.QUERY: ', request.query);
+    // response.send('this is your endpoint. bro. sick: ' + Date.now());
 });
 
 server.get('/getstudents', function(request, response){
